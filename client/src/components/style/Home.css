@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=B612+Mono&display=swap');
+
+.container {
+    font-family: 'B612 Mono', monospace;
+    font-weight: 400;
+    color: #FDB016;
+    position: fixed;
+    left: 50%;
+    top: 35%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 3;
+}
