@@ -90,7 +90,7 @@ class Chatbot extends Component {
                         </div>
                         <input type="text" 
                                onKeyPress={this._handleInputKeyPress} 
-                               placeholder="help me find beer brewski_bot..."
+                               placeholder="help me find beer..."
                                 />
                     </div>
                 </div>
