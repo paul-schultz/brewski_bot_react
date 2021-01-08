@@ -98,6 +98,7 @@ class Chatbot extends Component {
                              style={{ float: 'left', clear: 'both'}}>
                         </div>
                         <input type="text" 
+                               style={{ margin: 0, paddingLeft: '1%', paddingRight: '1%', width: '98%' }} 
                                onKeyPress={this._handleInputKeyPress} 
                                placeholder="help me find beer..."
                                 />

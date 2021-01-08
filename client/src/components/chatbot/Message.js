@@ -1,6 +1,8 @@
 import React from 'react';
 import 'materialize-css/dist/css/materialize.min.css';
 
+import Icon from '../ui/Icon'
+
 const Message = (props) => {
     return (
         <div className="col s12 m8 offset-m2 l6 offset-l3 grey darken-3" >
@@ -8,10 +10,7 @@ const Message = (props) => {
                 <div className="row valign-wrapper grey darken-3">
                     {props.speaks==='bot' &&
                     <div className="col s2" >
-                        <a href="/" className="btn-floating btn-large waves-effect waves-light z-depth-5"
-                                    style={{ backgroundColor: '#FDB016',
-                                             color: '#464646' }}
-                                    >{props.speaks}</a>
+                        <Icon />
                     </div>
                     }
                     {props.speaks==='bot' && 

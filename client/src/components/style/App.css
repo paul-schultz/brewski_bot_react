@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=B612+Mono&display=swap');
+
 body {
   background: linear-gradient(180deg, #464646, #222222);
   width: 100vw;
@@ -25,5 +27,15 @@ body {
   transform: translate(-50%, -50%);
   z-index: 2;
 }
+
+.foot {
+  font-family: 'B612 Mono', monospace;
+  color: #FDB016;
+  width: 35vw;
+  margin: auto;
+  position: absolute;
+  left: 0; bottom: 20px; right: 0;
+}
+
 
 

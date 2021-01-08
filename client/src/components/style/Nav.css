@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=B612+Mono&display=swap');
+
+
+.nav-container, .nav-left, .nav-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.nav-container {
+    width: 96vw;
+    justify-content: space-between;
+    position: absolute;
+    z-index: 4;
+    margin-left: 2vw;
+    margin-top: 2vh;
+}
+
+.nav-container a {
+    font-family: 'B612 Mono', monospace;
+    color: #FDB016; 
+    font-size: 24px;
+    text-decoration: none;
+}
+
+.nav-left {
+    width: 60vw;
+}
+
+.logo {
+    height: 150px;
+}
+
+.logo-text  a {
+    font-size: 36px;
+    letter-spacing: 8px;
+}
+
+.nav-right {
+    width: 40vw;
+    justify-content: space-around;
+}
+
+.nav-container a:active,
+.nav-container a:focus {
+    border-bottom: 3px solid #FDB016;
+}
+
+
