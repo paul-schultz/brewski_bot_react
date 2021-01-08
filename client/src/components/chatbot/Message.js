@@ -15,25 +15,25 @@ const Message = (props) => {
                     </div>
                     }
                     {props.speaks==='bot' && 
-                    <div className="col s10" style={{ fontSize: '1.4em'}}>
+                    <div className="col s10 left-align" style={{ fontSize: '1.4em'}}>
                         <span className="left" style={{ color: '#FDB016' }}>
                         {props.text}
                         </span>
                     </div>
                     }
                     {props.speaks==='me' && 
-                    <div className="col s10" style={{ fontSize: '1.4em'}}>
+                    <div className="col s11 right-align" style={{ fontSize: '1.4em'}}>
                         <span className="right" style={{ color: '#FDB016' }}>
                         {props.text}
                         </span>
                     </div>
                     }
                     {props.speaks==='me' &&
-                    <div className="col s2" >
-                        <a href="/" className="btn-floating btn-large waves-effect waves-light z-depth-5"
+                    <div className="col s1" >
+                        {/* <a href="/" className="btn-floating btn-large waves-effect waves-light z-depth-5"
                                     style={{ backgroundColor: '#FDB016',
                                              color: '#464646' }}
-                                    >{props.speaks}</a>
+                                    >{props.speaks}</a> */}
                     </div>
                     }
                 </div>
