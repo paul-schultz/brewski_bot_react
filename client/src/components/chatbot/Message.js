@@ -23,7 +23,7 @@ const Message = (props) => {
                     }
                     {props.speaks==='me' && 
                     <div className="col s11 right-align" style={{ fontSize: '1.4em'}}>
-                        <span className="right" style={{ color: '#FDB016' }}>
+                        <span className="right" style={{ color: '#f4f4f4' }}>
                         {props.text}
                         </span>
                     </div>
