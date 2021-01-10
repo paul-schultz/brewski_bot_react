@@ -94,6 +94,10 @@ button.learn-more:hover {
 	transform: translate(0, 0.25em);
 }
 
+button.learn-more:focus {
+	background: #FDB016;
+}
+
 button.learn-more:hover::before {
 	box-shadow: 0 0 0 2px #8C5E00, 0 0.5em 0 0  #22222280;
 	transform: translate3d(0, 0.5em, -1em);

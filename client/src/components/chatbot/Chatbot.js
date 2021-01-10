@@ -4,6 +4,7 @@ import Cookies from 'universal-cookie';
 import { v4 as uuid } from 'uuid';
 
 import Message from './Message';
+import QuickReplies from './QuickReplies';
 
 import '../style/Chatbot.css';
 
@@ -16,6 +17,7 @@ class Chatbot extends Component {
         super(props);
 
         this._handleInputKeyPress = this._handleInputKeyPress.bind(this);
+        this._handleQuickReplyPayload = this._handleQuickReplyPayload.bind(this);
         this.state = {
             messages: []
         };
@@ -68,10 +70,36 @@ class Chatbot extends Component {
         this.messagesEnd.scrollIntoView({ behaviour: 'smooth' });
     }
 
+    _handleQuickReplyPayload(event, payload, text) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        this.df_text_query(text);
+    }
+
+    renderOneMessage(message, i) {
+
+        if (message.msg && message.msg.text && message.msg.text.text) {
+            return <Message key={i} speaks={message.speaks} text={message.msg.text.text} />
+
+        } else if (message.msg &&
+            message.msg.payload &&
+            message.msg.payload.fields &&
+            message.msg.payload.fields.quick_replies 
+        ) {
+            return <QuickReplies
+                text={message.msg.payload.fields.text ? message.msg.payload.fields.text : null}
+                key={i}
+                replyClick={this._handleQuickReplyPayload}
+                speaks={message.speaks}
+                payload={message.msg.payload.fields.quick_replies.listValue.values}/>;
+        } 
+    }
+
     renderMessages(returnedMessages) {
         if (returnedMessages) {
             return returnedMessages.map((message, i) => {
-                return <Message key={i} speaks={message.speaks} text={message.msg.text.text} />
+                return this.renderOneMessage(message, i);
             });
         } else {
             return null;
