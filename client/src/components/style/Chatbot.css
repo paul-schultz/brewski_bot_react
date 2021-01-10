@@ -13,13 +13,15 @@
     border: 2px solid #fdb01677;
     border-radius: 20px;
     box-shadow: inset 0px 0px 30px rgba(0,0,0,0.5);
-    overflow: hidden
+    overflow: hidden;
 }
 
 #chatbot {
+  position: relative;
     height: 100%;
     width: 100%;
     overflow: auto;
+    padding-bottom: 4em;
 }
 
 #chatbot p {
@@ -32,7 +34,7 @@
 
 /* width */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 15px;
     border-radius: 20px;
   }
 
@@ -162,15 +164,24 @@
     outline-width : medium;  
 }
 
+.input  {
+  margin-top: 1em;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #464646;
+  border-top: 1px solid #fdb01677;
+}
+
 #chatbot input[type="text"] {
   font-family: 'B612 Mono', monospace;
-  padding-bottom: 1em;
-  border-bottom: 2px solid #464646;
+  padding: 1em;
+  border-top: 2px solid #464646;
   text-indent: 1em;
 }
 
 #chatbot input[type="text"]:focus {
-  border-bottom: 2px solid #FDB016;
+  border-top: 2px solid #FDB016;
 }
 
 [placeholder]:focus::-webkit-input-placeholder {

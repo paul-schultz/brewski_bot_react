@@ -5,6 +5,7 @@ import { v4 as uuid } from 'uuid';
 
 import Message from './Message';
 import QuickReplies from './QuickReplies';
+import Card from './Card';
 
 import '../style/Chatbot.css';
 
@@ -41,7 +42,12 @@ class Chatbot extends Component {
         this.setState({messages: [...this.state.messages, says]});
         const res = await axios.post('/api/df_text_query', {text: queryText, userID: cookies.get('userID') });
 
+        let query = res.data.queryText
+        let action = res.data.action
+        console.log(query, action)
+
         for (let msg of res.data.fulfillmentMessages) {
+            console.log(JSON.stringify(msg));
             says = {
                 speaks: 'bot',
                 msg: msg
@@ -77,11 +83,27 @@ class Chatbot extends Component {
         this.df_text_query(text);
     }
 
+    renderCards(cards) {
+        return cards.map((card, i) => <Card key={i} payload={card.structValue} />);
+    }
+
     renderOneMessage(message, i) {
 
         if (message.msg && message.msg.text && message.msg.text.text) {
             return <Message key={i} speaks={message.speaks} text={message.msg.text.text} />
 
+        }else if ( message.msg && message.msg.payload.fields.cards ) {
+            return <div key={i}>
+                <div className="card-panel grey lighten-5 z-depth-1" style={{ marginBottom: '30px' }}>
+                    <div style={{ overflow: 'hidden' }}>
+                        <div style={{ overflow: 'auto', overflowY: 'scroll' }}>
+                            <div style={{ height: 300, width: message.msg.payload.fields.cards.listValue.values.length * 270 }}>
+                                {this.renderCards(message.msg.payload.fields.cards.listValue.values)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         } else if (message.msg &&
             message.msg.payload &&
             message.msg.payload.fields &&
@@ -125,11 +147,13 @@ class Chatbot extends Component {
                         <div ref={(el) => { this.messagesEnd = el; }} 
                              style={{ float: 'left', clear: 'both'}}>
                         </div>
-                        <input type="text" 
-                               style={{ margin: 0, paddingLeft: '1%', paddingRight: '1%', width: '98%' }} 
-                               onKeyPress={this._handleInputKeyPress} 
-                               placeholder="help me find beer..."
-                                />
+                        <div className="input">
+                            <input type="text" 
+                                style={{ margin: 0, paddingLeft: '1%', paddingRight: '1%', width: '98%' }} 
+                                onKeyPress={this._handleInputKeyPress} 
+                                placeholder="help me find beer..."
+                                    />
+                        </div>                        
                     </div>
                 </div>
             </div>
