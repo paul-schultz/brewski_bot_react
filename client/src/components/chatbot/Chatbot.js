@@ -60,18 +60,23 @@ class Chatbot extends Component {
                     searchBy = 'city'
                 }
                 let breweries = [];
+                // google places key
+                const key = "AIzaSyBzRPO1aFfHK14R7PFF__v_XTghJb_TQOI"
                 const breweryDB = await axios.get(`https://api.openbrewerydb.org/breweries?by_${searchBy}=${ent}`)
                 // console.log(breweryDB)
                 for (var i = 0; i <= breweryDB.data.length - 1; i++) {
                     if (breweryDB.data[i].name && breweryDB.data[i].street && breweryDB.data[i].city && breweryDB.data[i].state && breweryDB.data[i].website_url) {
-                        // implement google places API here 
+                        // implement google places API here  
+                        const google = await axios.get(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${breweryDB.data[i].name}%20${breweryDB.data[i].city}&inputtype=textquery&fields=photos&key=${key}`)
                         breweries.push(
                             {
                             name: breweryDB.data[i].name,
                             street: breweryDB.data[i].street,
                             city: breweryDB.data[i].city,
                             state: breweryDB.data[i].state,
-                            website_url: breweryDB.data[i].website_url
+                            website_url: breweryDB.data[i].website_url,
+                            mapsQuery: `https://www.google.com/maps/search/?api=1&query=${breweryDB.data[i].name}%20${breweryDB.data[i].city}`,
+                            googleImage: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${google.data.candidates[0].photos[0].photo_reference}&key=${key}`
                         })
                     } 
                 }

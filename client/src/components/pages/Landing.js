@@ -17,7 +17,7 @@ const Landing = () => {
                 </div>
             </div>
             <p className="subheader">The Virtual Drinking Buddy</p>
-            <button class="learn-more">
+            <button className="learn-more">
                 <Link to={'/home'}
                       style={{ textDecoration: 'none', color: 'inherit' }}>
                     Enter Site
