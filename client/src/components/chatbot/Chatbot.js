@@ -6,6 +6,7 @@ import { v4 as uuid } from 'uuid';
 import Message from './Message';
 import QuickReplies from './QuickReplies';
 import Card from './Card';
+// import GetNameCard from './GetNameCard';
 
 import '../style/Chatbot.css';
 
@@ -42,15 +43,50 @@ class Chatbot extends Component {
         this.setState({messages: [...this.state.messages, says]});
         const res = await axios.post('/api/df_text_query', {text: queryText, userID: cookies.get('userID') });
 
-        let query = res.data.queryText
         let action = res.data.action
-        console.log(query, action)
+        let anyEntity = res.data.parameters.fields.any
+        let cityEntity = res.data.parameters.fields["geo-city"]
 
         for (let msg of res.data.fulfillmentMessages) {
-            console.log(JSON.stringify(msg));
-            says = {
-                speaks: 'bot',
-                msg: msg
+            // console.log(JSON.stringify(msg));
+            if (anyEntity || cityEntity) {
+                let ent = ''
+                let searchBy = ''
+                if (anyEntity !== undefined) {
+                    ent = anyEntity.stringValue
+                    searchBy = 'name'
+                } else if (cityEntity !== undefined) {
+                    ent = cityEntity.stringValue
+                    searchBy = 'city'
+                }
+                let breweries = [];
+                const breweryDB = await axios.get(`https://api.openbrewerydb.org/breweries?by_${searchBy}=${ent}`)
+                // console.log(breweryDB)
+                for (var i = 0; i <= breweryDB.data.length - 1; i++) {
+                    if (breweryDB.data[i].name && breweryDB.data[i].street && breweryDB.data[i].city && breweryDB.data[i].state && breweryDB.data[i].website_url) {
+                        // implement google places API here 
+                        breweries.push(
+                            {
+                            name: breweryDB.data[i].name,
+                            street: breweryDB.data[i].street,
+                            city: breweryDB.data[i].city,
+                            state: breweryDB.data[i].state,
+                            website_url: breweryDB.data[i].website_url
+                        })
+                    } 
+                }
+                says = {
+                    speaks: 'bot',
+                    msg: msg,
+                    entity: ent,
+                    action: action,
+                    breweries: breweries
+                }
+            } else {
+                says = {
+                    speaks: 'bot',
+                    msg: msg
+                }
             }
             this.setState({messages: [...this.state.messages, says]});
         }
@@ -84,7 +120,8 @@ class Chatbot extends Component {
     }
 
     renderCards(cards) {
-        return cards.map((card, i) => <Card key={i} payload={card.structValue} />);
+        // console.log(cards)
+        return cards.map((card, i) => <Card key={i} payload={card} /> );
     }
 
     renderOneMessage(message, i) {
@@ -92,13 +129,13 @@ class Chatbot extends Component {
         if (message.msg && message.msg.text && message.msg.text.text) {
             return <Message key={i} speaks={message.speaks} text={message.msg.text.text} />
 
-        }else if ( message.msg && message.msg.payload.fields.cards ) {
+        } else if ( message.action ==='get-name' || message.action === 'get-city') {
             return <div key={i}>
                 <div className="card-panel grey lighten-5 z-depth-1" style={{ marginBottom: '30px' }}>
                     <div style={{ overflow: 'hidden' }}>
                         <div style={{ overflow: 'auto', overflowY: 'scroll' }}>
-                            <div style={{ height: 300, width: message.msg.payload.fields.cards.listValue.values.length * 270 }}>
-                                {this.renderCards(message.msg.payload.fields.cards.listValue.values)}
+                            <div style={{ height: 300, width: message.breweries.length * 270 }}>
+                                {this.renderCards(message.breweries)}
                             </div>
                         </div>
                     </div>
@@ -144,6 +181,7 @@ class Chatbot extends Component {
                     <div id="chatbot">
                         <p>chat with brewski_bot</p>
                         {this.renderMessages(this.state.messages)}
+                        {console.log(this.state.messages    )}
                         <div ref={(el) => { this.messagesEnd = el; }} 
                              style={{ float: 'left', clear: 'both'}}>
                         </div>
