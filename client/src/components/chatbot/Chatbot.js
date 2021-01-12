@@ -5,7 +5,7 @@ import { v4 as uuid } from 'uuid';
 
 import Message from './Message';
 import QuickReplies from './QuickReplies';
-import Card from './Card';
+import BreweryCard from './BreweryCard';
 // import GetNameCard from './GetNameCard';
 
 import '../style/Chatbot.css';
@@ -49,7 +49,9 @@ class Chatbot extends Component {
 
         for (let msg of res.data.fulfillmentMessages) {
             // console.log(JSON.stringify(msg));
-            if (anyEntity || cityEntity) {
+            // Handle get-name and get-city actions
+            if (action === 'get-name' || action === 'get-city') {
+                console.log(`Action: ${action}`)
                 let ent = ''
                 let searchBy = ''
                 if (anyEntity !== undefined) {
@@ -61,13 +63,14 @@ class Chatbot extends Component {
                 }
                 let breweries = [];
                 // google places key
+                const cors = "http://localhost:8080/"
                 const key = "AIzaSyBzRPO1aFfHK14R7PFF__v_XTghJb_TQOI"
                 const breweryDB = await axios.get(`https://api.openbrewerydb.org/breweries?by_${searchBy}=${ent}`)
                 // console.log(breweryDB)
                 for (var i = 0; i <= breweryDB.data.length - 1; i++) {
-                    if (breweryDB.data[i].name && breweryDB.data[i].street && breweryDB.data[i].city && breweryDB.data[i].state && breweryDB.data[i].website_url) {
+                    if (breweryDB.data[i].name && breweryDB.data[i].name.length < 32 && breweryDB.data[i].street && breweryDB.data[i].city && breweryDB.data[i].state && breweryDB.data[i].website_url) {
                         // implement google places API here  
-                        const google = await axios.get(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${breweryDB.data[i].name}%20${breweryDB.data[i].city}&inputtype=textquery&fields=photos&key=${key}`)
+                        const google = await axios.get(`${cors}https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${breweryDB.data[i].name}%20${breweryDB.data[i].city}&inputtype=textquery&fields=photos&key=${key}`)
                         breweries.push(
                             {
                             name: breweryDB.data[i].name,
@@ -124,9 +127,9 @@ class Chatbot extends Component {
         this.df_text_query(text);
     }
 
-    renderCards(cards) {
+    renderBreweryCards(cards) {
         // console.log(cards)
-        return cards.map((card, i) => <Card key={i} payload={card} /> );
+        return cards.map((card, i) => <BreweryCard key={i} payload={card} /> );
     }
 
     renderOneMessage(message, i) {
@@ -136,11 +139,11 @@ class Chatbot extends Component {
 
         } else if ( message.action ==='get-name' || message.action === 'get-city') {
             return <div key={i}>
-                <div className="card-panel grey lighten-5 z-depth-1" style={{ marginBottom: '30px' }}>
+                <div className="card-panel grey darken-3 z-depth-1" style={{ marginBottom: '-10px' }}>
                     <div style={{ overflow: 'hidden' }}>
                         <div style={{ overflow: 'auto', overflowY: 'scroll' }}>
                             <div style={{ height: 300, width: message.breweries.length * 270 }}>
-                                {this.renderCards(message.breweries)}
+                                {this.renderBreweryCards(message.breweries)}
                             </div>
                         </div>
                     </div>

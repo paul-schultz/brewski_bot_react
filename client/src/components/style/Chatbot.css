@@ -57,6 +57,10 @@
     background-color: #FDB016; 
   }
 
+  ::-webkit-scrollbar-corner {
+    background: rgba(0,0,0,0);
+  }
+
 #chatbot input[type="text"]  {
     animation : none;
     animation-delay : 0;
