@@ -6,7 +6,7 @@ import { v4 as uuid } from 'uuid';
 import Message from './Message';
 import QuickReplies from './QuickReplies';
 import BreweryCard from './BreweryCard';
-// import GetNameCard from './GetNameCard';
+import BeerCard from './BeerCard';
 
 import '../style/Chatbot.css';
 
@@ -48,8 +48,8 @@ class Chatbot extends Component {
         let cityEntity = res.data.parameters.fields["geo-city"]
 
         for (let msg of res.data.fulfillmentMessages) {
-            // console.log(JSON.stringify(msg));
-            // Handle get-name and get-city actions
+
+            // Trigger get-name and get-city actions
             if (action === 'get-name' || action === 'get-city') {
                 console.log(`Action: ${action}`)
                 let ent = ''
@@ -64,7 +64,7 @@ class Chatbot extends Component {
                 let breweries = [];
                 // google places key
                 const cors = "http://localhost:8080/"
-                const key = "AIzaSyBzRPO1aFfHK14R7PFF__v_XTghJb_TQOI"
+                const key = process.env.REACT_APP_GOOGLE_PLACES_KEY
                 const breweryDB = await axios.get(`https://api.openbrewerydb.org/breweries?by_${searchBy}=${ent}`)
                 // console.log(breweryDB)
                 for (var i = 0; i <= breweryDB.data.length - 1; i++) {
@@ -89,6 +89,34 @@ class Chatbot extends Component {
                     entity: ent,
                     action: action,
                     breweries: breweries
+                }
+
+            // Trigger get-beer action
+            } else if (action === 'get-beer') {
+                let ent = anyEntity.stringValue
+                let utID = process.env.REACT_APP_UNTAPPD_ID
+                let utSecret = process.env.REACT_APP_UNTAPPD_SECRET
+                const untappdURL = `https://api.untappd.com/v4/search/beer?q=${ent}&client_id=${utID}&client_secret=${utSecret}` 
+                let beers = []
+
+                const beerDB = await axios.get(untappdURL)
+                console.log(beerDB)
+                for (var i = 0;  i <= 4; i++) {
+                    beers.push({
+                        name: beerDB.data.response.beers.items[i].beer.beer_name,
+                        brewery: beerDB.data.response.beers.items[i].brewery.brewery_name,
+                        beer_style: beerDB.data.response.beers.items[i].beer.beer_style,
+                        abv: beerDB.data.response.beers.items[i].beer.beer_abv,
+                        image: beerDB.data.response.beers.items[i].beer.beer_label,
+                        url: beerDB.data.response.beers.items[i].brewery.contact.url
+                    })
+                }
+                says = {
+                    speaks: 'bot',
+                    msg: msg,
+                    entity: ent,
+                    action: action,
+                    beers: beers
                 }
             } else {
                 says = {
@@ -128,8 +156,11 @@ class Chatbot extends Component {
     }
 
     renderBreweryCards(cards) {
-        // console.log(cards)
         return cards.map((card, i) => <BreweryCard key={i} payload={card} /> );
+    }
+
+    renderBeerCards(cards) {
+        return cards.map((card, i) => <BeerCard key={i} payload={card} /> );
     }
 
     renderOneMessage(message, i) {
@@ -149,6 +180,20 @@ class Chatbot extends Component {
                     </div>
                 </div>
             </div>
+
+        } else if (message.action === 'get-beer') {
+            return <div key={i}>
+                <div className="card-panel grey darken-3 z-depth-1" style={{ marginBottom: '-10px' }}>
+                    <div style={{ overflow: 'hidden' }}>
+                        <div style={{ overflow: 'auto', overflowY: 'scroll' }}>
+                            <div style={{ height: 300, width: message.beers.length * 270 }}>
+                                {this.renderBeerCards(message.beers)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         } else if (message.msg &&
             message.msg.payload &&
             message.msg.payload.fields &&
@@ -189,7 +234,7 @@ class Chatbot extends Component {
                     <div id="chatbot">
                         <p>chat with brewski_bot</p>
                         {this.renderMessages(this.state.messages)}
-                        {console.log(this.state.messages    )}
+                        {console.log(this.state.messages)}
                         <div ref={(el) => { this.messagesEnd = el; }} 
                              style={{ float: 'left', clear: 'both'}}>
                         </div>

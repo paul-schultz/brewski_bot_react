@@ -8,10 +8,10 @@ const BreweryCard = (props) => (
             <img  style={{ filter: 'brightness(50%)'}}
                   alt={props.payload.name} 
                   src={props.payload.googleImage}></img>
-            <span class="card-title left-align" style={{fontSize: '1.4em'}}>{props.payload.name}</span>
+            <span className="card-title left-align" style={{fontSize: '1.4em'}}>{props.payload.name}</span>
           </div>
-          <div class="card-content">
-              <p class="left-align" style={{fontSize: '1.2em'}}>
+          <div className="card-content">
+              <p className="left-align" style={{fontSize: '1.2em'}}>
                 {props.payload.street} <br></br> {props.payload.city}, {props.payload.state}
               </p>
           </div>
