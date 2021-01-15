@@ -1,6 +1,6 @@
 import React from 'react';
 
-import '../style/Home.css';
+import '../style/Chat.css';
 
 import Chatbot from '../chatbot/Chatbot'
 

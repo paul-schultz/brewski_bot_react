@@ -94,8 +94,8 @@ class Chatbot extends Component {
             // Trigger get-beer action
             } else if (action === 'get-beer') {
                 let ent = anyEntity.stringValue
-                let utID = process.env.REACT_APP_UNTAPPD_ID
-                let utSecret = process.env.REACT_APP_UNTAPPD_SECRET
+                const utID = process.env.REACT_APP_UNTAPPD_ID
+                const utSecret = process.env.REACT_APP_UNTAPPD_SECRET
                 const untappdURL = `https://api.untappd.com/v4/search/beer?q=${ent}&client_id=${utID}&client_secret=${utSecret}` 
                 let beers = []
 

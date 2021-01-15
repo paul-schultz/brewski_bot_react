@@ -16,7 +16,7 @@ const Nav = () => (
                 </div>
             </div>
             <div className="nav-right">
-                <p><Link to={'/home'}>Home</Link></p> 
+                <p><Link to={'/chat'}>Chat</Link></p> 
                 <p><Link to={'/about'}>About</Link></p> 
                 <p><Link to={'/contact'}>Contact</Link></p> 
             </div>

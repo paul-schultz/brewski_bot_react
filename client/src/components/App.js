@@ -9,7 +9,9 @@ import Pipes from './ui/Pipes';
 import Brewery from './ui/Brewery';
 
 import Landing from './pages/Landing';
-import Home from './pages/Home';
+import Chat from './pages/Chat';
+import About from './pages/About';
+import Contact from './pages/Contact';
 
 const TITLE = 'brewski_bot'
 
@@ -29,7 +31,9 @@ function App() {
           <div>
             <NavBar /> 
             <Route exact path="/" component={Landing} />
-            <Route exact path="/home" component={Home} />
+            <Route exact path="/chat" component={Chat} />
+            <Route exact path="/about" component={About} />
+            <Route exact path="/contact" component={Contact} />
           </div>
         </BrowserRouter>
       </div> 
