@@ -194,3 +194,10 @@
   text-indent: -100%;
   opacity: 1;
 }
+
+.drop {
+  position: fixed;
+  bottom: -470px;
+  right: 160px;
+  z-index: 7;
+}

@@ -7,7 +7,10 @@ import Message from './Message';
 import QuickReplies from './QuickReplies';
 import BreweryCard from './BreweryCard';
 import BeerCard from './BeerCard';
+import RideCard from './RideCard';
+import Dropdown from './Dropdown';
 
+import 'materialize-css/dist/css/materialize.min.css';
 import '../style/Chatbot.css';
 
 const cookies = new Cookies();
@@ -43,14 +46,14 @@ class Chatbot extends Component {
         this.setState({messages: [...this.state.messages, says]});
         const res = await axios.post('/api/df_text_query', {text: queryText, userID: cookies.get('userID') });
 
-        let action = res.data.action
-        let anyEntity = res.data.parameters.fields.any
-        let cityEntity = res.data.parameters.fields["geo-city"]
+        let action = res.data.action;
+        let anyEntity = res.data.parameters.fields.any;
+        let cityEntity = res.data.parameters.fields["geo-city"];
 
         for (let msg of res.data.fulfillmentMessages) {
 
-            // Trigger get-name and get-city actions
-            if (action === 'get-name' || action === 'get-city') {
+            // Change JSON response structure dependent on action
+                   if (action === 'get-name' || action === 'get-city') {
                 console.log(`Action: ${action}`)
                 let ent = ''
                 let searchBy = ''
@@ -93,17 +96,18 @@ class Chatbot extends Component {
 
             // Trigger get-beer action
             } else if (action === 'get-beer') {
-                let ent = anyEntity.stringValue
-                const utID = process.env.REACT_APP_UNTAPPD_ID
-                const utSecret = process.env.REACT_APP_UNTAPPD_SECRET
-                const untappdURL = `https://api.untappd.com/v4/search/beer?q=${ent}&client_id=${utID}&client_secret=${utSecret}` 
-                let beers = []
+                let ent = anyEntity.stringValue;
+                const utID = process.env.REACT_APP_UNTAPPD_ID;
+                const utSecret = process.env.REACT_APP_UNTAPPD_SECRET;
+                const untappdURL = `https://api.untappd.com/v4/search/beer?q=${ent}&client_id=${utID}&client_secret=${utSecret}` ;
+                let beers = [];
 
-                const beerDB = await axios.get(untappdURL)
+                const beerDB = await axios.get(untappdURL);
                 console.log(beerDB)
                 for (var i = 0;  i <= 4; i++) {
                     beers.push({
                         name: beerDB.data.response.beers.items[i].beer.beer_name,
+                        description: beerDB.data.response.beers.items[i].beer.beer_description,
                         brewery: beerDB.data.response.beers.items[i].brewery.brewery_name,
                         beer_style: beerDB.data.response.beers.items[i].beer.beer_style,
                         abv: beerDB.data.response.beers.items[i].beer.beer_abv,
@@ -117,6 +121,27 @@ class Chatbot extends Component {
                     entity: ent,
                     action: action,
                     beers: beers
+                }
+            } else if (action === 'get-ride') {
+                let rides = [];
+
+                rides.push({
+                    title: 'Uber',
+                    image: 'https://images.ctfassets.net/37l920h5or7f/5veFGObZjqmQY8qKu6auAW/abe271ddb25ae87d1212a4da798d3229/asset-030.jpg?fm=jpg&q=70&w=1600',
+                    link: 'https://auth.uber.com/login/?breeze_local_zone=phx3&next_url=https%3A%2F%2Fm.uber.com%2Flooking%3F_ga%3D2.243517442.640375780.1610728947-973137274.1609435436&state=Z16bRV1Gw6C1gEXZANKkwBg-antk71SbGUeGmAKfO6w%3D',
+                })
+
+                rides.push({
+                    title: 'Lyft',
+                    image: 'https://lh3.googleusercontent.com/pw/ACtC-3dFlWRhFhZzgLNnPvX9k0cq3GcVHz57FdpCEZrXV4lMvHTFl0hYtMwZsfyS1m5O-SxIZf3rssT2YfqEjYCwAv3ggWtP5stt2XNuXjQyo_ym3Y1niD9cUCPEG8aZzJbMkJDQwJXT0iQXKEsvgBqALhmM=w1136-h639-no?authuser=0',
+                    link: 'https://ride.lyft.com/',
+                })
+
+                says = {
+                    speaks: 'bot',
+                    msg: msg,
+                    action: action,
+                    rides: rides
                 }
             } else {
                 says = {
@@ -163,12 +188,16 @@ class Chatbot extends Component {
         return cards.map((card, i) => <BeerCard key={i} payload={card} /> );
     }
 
+    renderRideCards(cards) {
+        return cards.map((card, i) => <RideCard key={i} payload={card} /> );
+    }
+
     renderOneMessage(message, i) {
 
-        if (message.msg && message.msg.text && message.msg.text.text) {
+               if ( message.msg && message.msg.text && message.msg.text.text ) {
             return <Message key={i} speaks={message.speaks} text={message.msg.text.text} />
 
-        } else if ( message.action ==='get-name' || message.action === 'get-city') {
+        } else if ( message.action ==='get-name' || message.action === 'get-city' ) {
             return <div key={i}>
                 <div className="card-panel grey darken-3 z-depth-1" style={{ marginBottom: '-10px' }}>
                     <div style={{ overflow: 'hidden' }}>
@@ -181,7 +210,7 @@ class Chatbot extends Component {
                 </div>
             </div>
 
-        } else if (message.action === 'get-beer') {
+        } else if ( message.action === 'get-beer' ) {
             return <div key={i}>
                 <div className="card-panel grey darken-3 z-depth-1" style={{ marginBottom: '-10px' }}>
                     <div style={{ overflow: 'hidden' }}>
@@ -194,11 +223,19 @@ class Chatbot extends Component {
                 </div>
             </div>
             
-        } else if (message.msg &&
-            message.msg.payload &&
-            message.msg.payload.fields &&
-            message.msg.payload.fields.quick_replies 
-        ) {
+        } else if ( message.action === 'get-ride' ) {
+            return <div key={i}>
+                <div className="card-panel grey darken-3 z-depth-1" style={{ marginBottom: '-10px' }}>
+                    <div style={{ overflow: 'hidden' }}>
+                        <div style={{ overflow: 'auto', overflowY: 'scroll' }}>
+                            <div style={{ height: 300, width: message.rides.length * 270 }}>
+                                {this.renderRideCards(message.rides)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        } else if ( message.msg && message.msg.payload && message.msg.payload.fields && message.msg.payload.fields.quick_replies ) {
             return <QuickReplies
                 text={message.msg.payload.fields.text ? message.msg.payload.fields.text : null}
                 key={i}
@@ -229,7 +266,7 @@ class Chatbot extends Component {
 
     render() {
         return (
-            <div className="flow">
+            <div className="flow">        
                 <div className="chatbot-container">
                     <div id="chatbot">
                         <p>chat with brewski_bot</p>
@@ -242,11 +279,15 @@ class Chatbot extends Component {
                             <input type="text" 
                                 style={{ margin: 0, paddingLeft: '1%', paddingRight: '1%', width: '98%' }} 
                                 onKeyPress={this._handleInputKeyPress} 
-                                placeholder="help me find beer..."
-                                    />
-                        </div>                        
+                                placeholder="help me find beer... "
+                                    />  
+                        </div>      
+                              
                     </div>
                 </div>
+                <div className="drop">
+                    <Dropdown className="dropdown-menu"/>     
+                </div>  
             </div>
         )
     }
