@@ -11,7 +11,7 @@ const About = () => {
     return (
         <div className="about-container">
             <div><h2>born from the question:</h2></div>
-            <div><p>"what would the combination of conversational AI and craft beer look like?"</p></div>
+            <div><p>"what would the intersection of conversational AI and craft beer look like?"</p></div>
             <div><p>brewski_bot runs on node.js, react, google dialogflow, and the open brewery db api </p></div>
             <div>
                 <div className="tech-stack">

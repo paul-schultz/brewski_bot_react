@@ -17,7 +17,9 @@
     padding: 1em 4em 1em 2em;
 }
 
-
+#contact-form p {
+    font-size: 1.4em;
+}
 
 #contact-form input[type="text"],
 #contact-form input[type="email"],
