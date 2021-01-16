@@ -23,6 +23,7 @@ class Chatbot extends Component {
 
         this._handleInputKeyPress = this._handleInputKeyPress.bind(this);
         this._handleQuickReplyPayload = this._handleQuickReplyPayload.bind(this);
+        this._handleMenuPress = this._handleMenuPress.bind(this);
         this.state = {
             messages: []
         };
@@ -262,7 +263,12 @@ class Chatbot extends Component {
         }
     }
 
-    
+    _handleMenuPress(event, text) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        this.df_text_query(text);
+    }
 
     render() {
         return (
@@ -286,7 +292,9 @@ class Chatbot extends Component {
                     </div>
                 </div>
                 <div className="drop">
-                    <Dropdown className="dropdown-menu"/>     
+                    <Dropdown className="dropdown-menu"
+                              replyClick={this._handleMenuPress} 
+                              />     
                 </div>  
             </div>
         )

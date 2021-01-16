@@ -1,13 +1,22 @@
 import React, {Component} from 'react';
-
-import '../style/Dropdown.css'
-// Import Materialize
 import M from "materialize-css";
 
+import '../style/Dropdown.css';
+
+import DropdownItem from './DropdownItem';
 
 class Dropdown extends Component {
     componentDidMount() {
         M.AutoInit();
+    }
+
+    constructor(props) {
+        super(props);
+        this._handleClick = this._handleClick.bind(this);
+    }
+
+    _handleClick(event, text) {
+        this.props.replyClick(event, text);
     }
     
     render() {
@@ -30,14 +39,9 @@ class Dropdown extends Component {
                     className='dropdown-content' 
                     style={{ backgroundColor: '#464646'}}
                 >
-                    <li><a href="/" 
-                           style={{ color: '#fdb016'  }}>
-                                Menu
-                        </a>
+                    <li>
+                        <DropdownItem click={this._handleClick} />
                     </li>
-                    <li><a href="/" style={{ color: '#fdb016'  }}>My Picks</a></li>
-                    <li className="divider black" tabIndex="-1"></li>
-                    <li><a href="/" style={{ color: '#fdb016'  }}>Help</a></li>
                 </ul>
             </div>
         </div>
