@@ -3,7 +3,8 @@ import M from "materialize-css";
 
 import '../style/Dropdown.css';
 
-import DropdownItem from './DropdownItem';
+import DropdownItemMenu from './DropdownItemMenu';
+import DropdownItemHelp from './DropdownItemHelp';
 
 class Dropdown extends Component {
     componentDidMount() {
@@ -40,7 +41,10 @@ class Dropdown extends Component {
                     style={{ backgroundColor: '#464646'}}
                 >
                     <li>
-                        <DropdownItem click={this._handleClick} />
+                        <DropdownItemMenu click={this._handleClick} />
+                    </li>
+                    <li>
+                        <DropdownItemHelp click={this._handleClick} />
                     </li>
                 </ul>
             </div>

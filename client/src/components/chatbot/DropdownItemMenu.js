@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DropdownItem = (props) => {
+const DropdownItemMenu = (props) => {
     return (
         <a
         href="/" 
@@ -17,4 +17,4 @@ const DropdownItem = (props) => {
     )
 };
 
-export default DropdownItem;
+export default DropdownItemMenu;
