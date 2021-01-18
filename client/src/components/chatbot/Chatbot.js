@@ -52,7 +52,6 @@ class Chatbot extends Component {
         let cityEntity = res.data.parameters.fields["geo-city"];
 
         for (let msg of res.data.fulfillmentMessages) {
-
             // Change JSON response structure dependent on action
                    if (action === 'get-name' || action === 'get-city') {
                 console.log(`Action: ${action}`)
@@ -197,7 +196,6 @@ class Chatbot extends Component {
 
                if ( message.msg && message.msg.text && message.msg.text.text ) {
             return <Message key={i} speaks={message.speaks} text={message.msg.text.text} />
-
         } else if ( message.action ==='get-name' || message.action === 'get-city' ) {
             return <div key={i}>
                 <div className="card-panel grey darken-3 z-depth-1" style={{ marginBottom: '-10px' }}>
@@ -243,7 +241,7 @@ class Chatbot extends Component {
                 replyClick={this._handleQuickReplyPayload}
                 speaks={message.speaks}
                 payload={message.msg.payload.fields.quick_replies.listValue.values}/>;
-        } 
+        }
     }
 
     renderMessages(returnedMessages) {
