@@ -32,11 +32,11 @@ const QuickReply = (props) => {
         onClick={(event) =>
             props.click(
                 event,
-                props.reply.structValue.fields.payload.stringValue,
-                props.reply.structValue.fields.text.stringValue
+                props.reply.payload,
+                props.reply.text
             )
         }>
-            {props.reply.structValue.fields.text.stringValue}
+            {props.reply.text}
         </a>
     )
 };
