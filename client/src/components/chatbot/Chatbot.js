@@ -236,8 +236,14 @@ class Chatbot extends Component {
                             searchBy = 'city'
                         }
                         let breweries = [];
-                        // google places key
-                        const cors = "http://localhost:8080/"
+                        var cors = ''
+                        if (process.env.NODE_ENV === 'production') {
+                            var cors = 'https://cors-anywhere.herokuapp.com/'
+                        } else {
+                            var cors = "http://localhost:8080/"
+                        }
+                        
+                        console.log(cors)
                         const key = process.env.REACT_APP_GOOGLE_PLACES_KEY
                         const breweryDB = await axios.get(`https://api.openbrewerydb.org/breweries?by_${searchBy}=${ent}`)
                         // console.log(breweryDB)
